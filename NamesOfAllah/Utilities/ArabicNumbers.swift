@@ -1,0 +1,27 @@
+//
+//  ArabicNumbers.swift
+//  NamesOfAllah
+//
+//  Converts numbers to Arabic-Indic digits (٠١٢٣٤٥٦٧٨٩)
+//
+
+import Foundation
+
+private let arabicDigitMap: [Character: Character] = [
+    "0": "٠", "1": "١", "2": "٢", "3": "٣", "4": "٤",
+    "5": "٥", "6": "٦", "7": "٧", "8": "٨", "9": "٩"
+]
+
+extension Int {
+    var arabicDigits: String {
+        let str = String(self)
+        return String(str.map { arabicDigitMap[$0] ?? $0 })
+    }
+}
+
+extension Double {
+    var arabicDigits: String {
+        let str = String(Int(self))
+        return String(str.map { arabicDigitMap[$0] ?? $0 })
+    }
+}

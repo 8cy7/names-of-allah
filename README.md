@@ -2,7 +2,7 @@
 
 An iOS app for learning and living the 99 Names of Allah, one name a day.
 
-> Previously published on the App Store. The source code is no longer available, so this repository showcases the app.
+> Previously published on the App Store.
 
 <p align="center">
   <img src="screenshots/1.jpg" width="180" />
@@ -23,7 +23,18 @@ An iOS app for learning and living the 99 Names of Allah, one name a day.
 
 ## Tech Stack
 
-Swift · SwiftUI · Local Notifications
+Swift · SwiftUI · WidgetKit · Local Notifications
+
+- Home screen widget showing the name of the day
+- Onboarding flow, favorites, sharing and settings
+- All 99 names stored locally in `NamesData.json`
+- Fonts: IBM Plex Sans Arabic and Diwan Mishafi
+
+## Run
+
+1. Open `NamesOfAllah.xcodeproj` in Xcode
+2. Choose your own development team under Signing & Capabilities for the app and widget targets
+3. Run on an iPhone or simulator with iOS 17 or later
 
 ## Author
 
