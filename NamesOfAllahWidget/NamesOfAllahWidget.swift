@@ -138,7 +138,6 @@ struct SmallWidgetView: View {
             // Arabic name
             Text(entry.name.nameArabic)
                 .font(.custom("DiwanMishafi", size: 38))
-                .kerning(1)
                 .foregroundStyle(
                     LinearGradient(
                         colors: [.white, Color(hex: "#ffd89b"), .white],
@@ -181,7 +180,6 @@ struct MediumWidgetView: View {
 
                 Text(entry.name.nameArabic)
                     .font(.custom("DiwanMishafi", size: 44))
-                    .kerning(1)
                     .foregroundStyle(
                         LinearGradient(
                             colors: [.white, Color(hex: "#ffd89b"), .white],

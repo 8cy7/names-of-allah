@@ -79,7 +79,6 @@ struct HomeView: View {
                     // Arabic Name with stunning effects - Diwan Mishafi (Quranic Mushaf Font)
                     Text(name.nameArabic)
                         .font(.custom("DiwanMishafi", size: 100))
-                        .kerning(2)
                         .foregroundStyle(
                             LinearGradient(
                                 colors: [
