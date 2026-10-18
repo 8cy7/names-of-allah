@@ -19,7 +19,7 @@ class DataManager: ObservableObject {
 
     // Use App Group to share data with widget
     private let defaults: UserDefaults = {
-        let appGroupID = "group.com.namesofallah.app"
+        let appGroupID = "group.com.alfahad.namesofallah"
         return UserDefaults(suiteName: appGroupID) ?? UserDefaults.standard
     }()
 
@@ -212,7 +212,7 @@ class DataManager: ObservableObject {
     /// Writes the start date to the App Group shared container as a file
     /// so the widget can read it even if UserDefaults sharing fails
     private func writeStartDateToSharedContainer(_ date: Date) {
-        let appGroupID = "group.com.namesofallah.app"
+        let appGroupID = "group.com.alfahad.namesofallah"
         guard let containerURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupID) else {
             print("⚠️ Could not access App Group container")
             return

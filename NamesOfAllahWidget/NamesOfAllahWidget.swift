@@ -44,7 +44,7 @@ struct Provider: TimelineProvider {
             return NameEntry(date: date, name: Name.sample, dayNumber: 1)
         }
 
-        let appGroupID = "group.com.namesofallah.app"
+        let appGroupID = "group.com.alfahad.namesofallah"
         let calendar = Calendar.current
         let targetDay = calendar.startOfDay(for: date)
 
