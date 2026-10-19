@@ -19,9 +19,8 @@ struct ShareOptionsSheet: View {
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
+        // No custom background, so the partial-height sheet shows the system Liquid Glass
         ZStack {
-            GradientBackground()
-
             VStack(spacing: 20) {
                 // Title
                 VStack(spacing: 8) {
@@ -62,7 +61,9 @@ struct ShareOptionButton: View {
     @StateObject private var themeManager = ThemeManager.shared
 
     var body: some View {
-        Button(action: action) {
+        Button {
+            action()
+        } label: {
             HStack(spacing: 14) {
                 Spacer()
 
@@ -75,16 +76,11 @@ struct ShareOptionButton: View {
                     .foregroundColor(themeManager.currentTheme.accentColor)
                     .frame(width: 30)
             }
-            .padding(.vertical, 14)
+            .padding(.vertical, 16)
             .padding(.horizontal, 20)
-            .background(
-                RoundedRectangle(cornerRadius: 14)
-                    .fill(Color.white.opacity(0.08))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 14)
-                            .stroke(Color.white.opacity(0.15), lineWidth: 1)
-                    )
-            )
+            .contentShape(.rect)
+            .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 20))
         }
+        .buttonStyle(.plain)
     }
 }

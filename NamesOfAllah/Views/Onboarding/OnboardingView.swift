@@ -21,13 +21,15 @@ struct OnboardingView: View {
                     Spacer()
 
                     if currentPage < 2 {
-                        Button(action: {
+                        Button {
                             viewModel.completeOnboarding()
-                        }) {
+                        } label: {
                             Text("تخطي")
                                 .font(.custom("IBMPlexSansArabic-Medium", size: 16))
-                                .foregroundColor(.white.opacity(0.5))
+                                .foregroundColor(.white.opacity(0.8))
+                                .padding(.horizontal, 6)
                         }
+                        .buttonStyle(.glass)
                         .transition(.opacity)
                     }
                 }
@@ -66,6 +68,9 @@ struct OnboardingView: View {
                             .animation(.easeInOut(duration: 0.3), value: currentPage)
                     }
                 }
+                .padding(.horizontal, 14)
+                .padding(.vertical, 10)
+                .glassEffect()
                 .padding(.bottom, 40)
             }
         }
@@ -75,4 +80,5 @@ struct OnboardingView: View {
 
 #Preview {
     OnboardingView(viewModel: NamesViewModel())
+        .environment(\.layoutDirection, .rightToLeft)
 }

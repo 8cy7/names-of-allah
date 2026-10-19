@@ -37,55 +37,47 @@ struct NameDetailView: View {
                     // MARK: - Header Section
                     VStack(spacing: 15) {
                         // Close button and Favorite
-                        HStack {
-                            // Share Button
-                            Button(action: {
-                                showShareOptions = true
-                                HapticManager.shared.impact(style: HapticManager.ImpactStyle.light)
-                            }) {
-                                Image(systemName: "square.and.arrow.up")
-                                    .font(.system(size: 20))
-                                    .foregroundColor(.white.opacity(0.7))
-                                    .padding(12)
-                                    .background(
-                                        Circle()
-                                            .fill(Color.white.opacity(0.1))
-                                    )
-                            }
+                        GlassEffectContainer(spacing: 12) {
+                            HStack(spacing: 12) {
+                                // Share Button
+                                Button {
+                                    showShareOptions = true
+                                    HapticManager.shared.impact(style: HapticManager.ImpactStyle.light)
+                                } label: {
+                                    Image(systemName: "square.and.arrow.up")
+                                        .font(.system(size: 18, weight: .semibold))
+                                        .foregroundStyle(.white)
+                                        .frame(width: 28, height: 28)
+                                }
 
-                            Spacer()
+                                Spacer()
 
-                            // Favorite Button
-                            Button(action: {
-                                isFavorite.toggle()
-                                viewModel.toggleFavorite(id: name.id)
-                                HapticManager.shared.impact(style: HapticManager.ImpactStyle.light)
-                            }) {
-                                Image(systemName: isFavorite ? "heart.fill" : "heart")
-                                    .font(.system(size: 22))
-                                    .foregroundColor(isFavorite ? .red : .white.opacity(0.7))
-                                    .scaleEffect(isFavorite ? 1.1 : 1.0)
-                                    .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isFavorite)
-                                    .padding(12)
-                                    .background(
-                                        Circle()
-                                            .fill(Color.white.opacity(0.1))
-                                    )
-                            }
+                                // Favorite Button
+                                Button {
+                                    isFavorite.toggle()
+                                    viewModel.toggleFavorite(id: name.id)
+                                    HapticManager.shared.impact(style: HapticManager.ImpactStyle.light)
+                                } label: {
+                                    Image(systemName: isFavorite ? "heart.fill" : "heart")
+                                        .font(.system(size: 18, weight: .semibold))
+                                        .foregroundStyle(isFavorite ? .red : .white)
+                                        .contentTransition(.symbolEffect(.replace))
+                                        .frame(width: 28, height: 28)
+                                }
 
-                            // Close Button
-                            Button(action: {
-                                dismiss()
-                            }) {
-                                Image(systemName: "xmark")
-                                    .font(.system(size: 18, weight: .semibold))
-                                    .foregroundColor(.white.opacity(0.7))
-                                    .padding(12)
-                                    .background(
-                                        Circle()
-                                            .fill(Color.white.opacity(0.1))
-                                    )
+                                // Close Button
+                                Button {
+                                    dismiss()
+                                } label: {
+                                    Image(systemName: "xmark")
+                                        .font(.system(size: 18, weight: .semibold))
+                                        .foregroundStyle(.white)
+                                        .frame(width: 28, height: 28)
+                                }
                             }
+                            .buttonStyle(.glass)
+                            .buttonBorderShape(.circle)
+                            .controlSize(.large)
                         }
                         .padding(.horizontal, 20)
                         .padding(.top, 55)
@@ -110,6 +102,9 @@ struct NameDetailView: View {
                             Text("اليوم \(name.id.arabicDigits) من ٩٩")
                                 .font(.custom("IBMPlexSansArabic-SemiBold", size: 14))
                                 .foregroundColor(themeManager.currentTheme.accentColor)
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 8)
+                                .glassEffect(.regular.tint(themeManager.currentTheme.accentColor.opacity(0.12)))
                                 .padding(.top, 5)
                         }
                         .padding(.vertical, 20)
@@ -192,23 +187,11 @@ struct NameDetailView: View {
                                     .font(.custom("IBMPlexSansArabic-SemiBold", size: 17))
                             }
                             .foregroundColor(.white)
-                            .padding(.horizontal, 40)
-                            .padding(.vertical, 14)
-                            .background(
-                                Capsule()
-                                    .fill(
-                                        LinearGradient(
-                                            colors: [
-                                                themeManager.currentTheme.accentColor,
-                                                themeManager.currentTheme.glowColor
-                                            ],
-                                            startPoint: .leading,
-                                            endPoint: .trailing
-                                        )
-                                    )
-                                    .shadow(color: themeManager.currentTheme.glowColor.opacity(0.3), radius: 10, x: 0, y: 5)
-                            )
+                            .padding(.horizontal, 24)
                         }
+                        .buttonStyle(.glassProminent)
+                        .tint(themeManager.currentTheme.accentColor)
+                        .controlSize(.large)
                         .scaleEffect(buttonScale)
                         .padding(.top, 10)
                     } else {
@@ -257,15 +240,11 @@ struct NameDetailView: View {
                                 .padding(.top, 12)
 
                             // Checkmark circle
-                            ZStack {
-                                Circle()
-                                    .fill(.ultraThinMaterial)
-                                    .frame(width: 64, height: 64)
-
-                                Image(systemName: "checkmark")
-                                    .font(.system(size: 26, weight: .semibold))
-                                    .foregroundColor(.white)
-                            }
+                            Image(systemName: "checkmark")
+                                .font(.system(size: 26, weight: .semibold))
+                                .foregroundColor(themeManager.currentTheme.accentColor)
+                                .frame(width: 64, height: 64)
+                                .background(.white.opacity(0.1), in: .circle)
 
                             // Title
                             Text("تم الإحصاء")
@@ -287,39 +266,24 @@ struct NameDetailView: View {
                             .padding(.horizontal, 16)
 
                             // Dismiss button
-                            Button(action: {
+                            Button {
                                 withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) {
                                     showRewardMessage = false
                                 }
-                            }) {
+                            } label: {
                                 Text("متابعة")
                                     .font(.custom("IBMPlexSansArabic-SemiBold", size: 16))
                                     .foregroundColor(.white)
                                     .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 14)
-                                    .background(.ultraThinMaterial)
-                                    .clipShape(RoundedRectangle(cornerRadius: 14))
                             }
+                            .buttonStyle(.glassProminent)
+                            .tint(themeManager.currentTheme.accentColor)
+                            .controlSize(.large)
                             .padding(.horizontal, 20)
-                            .padding(.bottom, 16)
+                            .padding(.bottom, 20)
                         }
                         .frame(maxWidth: .infinity)
-                        .background(
-                            ZStack {
-                                // Frosted glass background
-                                RoundedRectangle(cornerRadius: 28)
-                                    .fill(.ultraThinMaterial)
-
-                                // Subtle tint
-                                RoundedRectangle(cornerRadius: 28)
-                                    .fill(Color(hex: "#0a0e27").opacity(0.5))
-                            }
-                        )
-                        .clipShape(RoundedRectangle(cornerRadius: 28))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 28)
-                                .stroke(Color.white.opacity(0.12), lineWidth: 0.5)
-                        )
+                        .glassEffect(.regular.tint(Color(hex: "#0a0e27").opacity(0.4)), in: .rect(cornerRadius: 32))
                         .padding(.horizontal, 16)
                         .padding(.bottom, 20)
                         .transition(.move(edge: .bottom).combined(with: .opacity))

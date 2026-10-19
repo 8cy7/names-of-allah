@@ -180,42 +180,18 @@ struct NameCard_Compact: View {
                 onFavoriteToggle()
                 HapticManager.shared.impact(style: .light)
             }) {
-                ZStack {
-                    Circle()
-                        .fill(
-                            isFavorite ?
-                            LinearGradient(
-                                colors: [themeManager.currentTheme.accentColor, themeManager.currentTheme.glowColor],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            ) :
-                            LinearGradient(
-                                colors: [Color.white.opacity(0.1), Color.white.opacity(0.05)],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .frame(width: 36, height: 36)
-
-                    Image(systemName: isFavorite ? "heart.fill" : "heart")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundColor(.white)
-                        .scaleEffect(isFavorite ? 1.1 : 1.0)
-                        .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isFavorite)
-                }
+                Image(systemName: isFavorite ? "heart.fill" : "heart")
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundStyle(isFavorite ? themeManager.currentTheme.accentColor : .white.opacity(0.5))
+                    .contentTransition(.symbolEffect(.replace))
+                    .frame(width: 36, height: 36)
             }
             .buttonStyle(BorderlessButtonStyle())
         }
         .padding(.horizontal, 18)
         .padding(.vertical, 14)
-        .background(
-            RoundedRectangle(cornerRadius: 18)
-                .fill(Color.white.opacity(0.08))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 18)
-                        .stroke(Color.white.opacity(0.1), lineWidth: 0.5)
-                )
-        )
+        // Cards are content, so they use a quiet fill rather than Liquid Glass
+        .background(.white.opacity(0.06), in: .rect(cornerRadius: 20))
     }
 }
 
@@ -250,20 +226,15 @@ struct NameCard_Favorites: View {
             }) {
                 Image(systemName: isFavorite ? "heart.fill" : "heart")
                     .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(isFavorite ? themeManager.currentTheme.accentColor : .white.opacity(0.5))
+                    .foregroundStyle(isFavorite ? themeManager.currentTheme.accentColor : .white.opacity(0.5))
+                    .contentTransition(.symbolEffect(.replace))
+                    .frame(width: 36, height: 36)
             }
             .buttonStyle(BorderlessButtonStyle())
         }
         .padding(.horizontal, 18)
         .padding(.vertical, 16)
-        .background(
-            RoundedRectangle(cornerRadius: 18)
-                .fill(Color.white.opacity(0.08))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 18)
-                        .stroke(Color.white.opacity(0.1), lineWidth: 0.5)
-                )
-        )
+        .background(.white.opacity(0.06), in: .rect(cornerRadius: 20))
     }
 }
 

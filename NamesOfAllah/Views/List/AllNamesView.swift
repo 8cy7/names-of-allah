@@ -39,10 +39,7 @@ struct AllNamesView: View {
                     }
                     .padding(.horizontal, 16)
                     .padding(.vertical, 8)
-                    .background(
-                        Capsule()
-                            .fill(Color.white.opacity(0.1))
-                    )
+                    .glassEffect()
 
                     // Search Bar
                     HStack {
@@ -63,32 +60,29 @@ struct AllNamesView: View {
                             }
                         }
                     }
-                    .padding(12)
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(Color.white.opacity(0.1))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .stroke(Color.white.opacity(0.2), lineWidth: 1)
-                            )
-                    )
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
+                    .glassEffect()
                     .padding(.horizontal, 20)
 
                     // Filters
                     ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 12) {
-                            ForEach(NamesViewModel.NameFilter.allCases, id: \.self) { filter in
-                                FilterChip(
-                                    title: filter.rawValue,
-                                    isSelected: viewModel.selectedFilter == filter,
-                                    action: {
-                                        viewModel.selectedFilter = filter
-                                        HapticManager.shared.selection()
-                                    }
-                                )
+                        GlassEffectContainer(spacing: 12) {
+                            HStack(spacing: 12) {
+                                ForEach(NamesViewModel.NameFilter.allCases, id: \.self) { filter in
+                                    FilterChip(
+                                        title: filter.rawValue,
+                                        isSelected: viewModel.selectedFilter == filter,
+                                        action: {
+                                            viewModel.selectedFilter = filter
+                                            HapticManager.shared.selection()
+                                        }
+                                    )
+                                }
                             }
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 4)
                         }
-                        .padding(.horizontal, 20)
                     }
                 }
                 .padding(.bottom, 15)
@@ -128,7 +122,7 @@ struct AllNamesView: View {
                             }
                         }
                         .padding(.horizontal, 20)
-                        .padding(.bottom, 100)
+                        .padding(.bottom, 20)
                     }
                 }
             }
@@ -148,51 +142,27 @@ struct FilterChip: View {
     @StateObject private var themeManager = ThemeManager.shared
 
     var body: some View {
-        Button(action: action) {
+        Button {
+            action()
+        } label: {
             Text(title)
-                .font(.system(size: 14, weight: .medium))
+                .font(.system(size: 14, weight: isSelected ? .semibold : .medium))
                 .foregroundColor(isSelected ? .white : .white.opacity(0.7))
                 .padding(.horizontal, 18)
                 .padding(.vertical, 10)
-                .background(
-                    Capsule()
-                        .fill(
-                            isSelected ?
-                            LinearGradient(
-                                colors: [
-                                    themeManager.currentTheme.accentColor,
-                                    themeManager.currentTheme.glowColor
-                                ],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            ) :
-                            LinearGradient(
-                                colors: [Color.white.opacity(0.1)],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                        .overlay(
-                            Capsule()
-                                .stroke(
-                                    isSelected ?
-                                    themeManager.currentTheme.accentColor.opacity(0.5) :
-                                    Color.white.opacity(0.2),
-                                    lineWidth: isSelected ? 1.5 : 1
-                                )
-                        )
-                        .shadow(
-                            color: isSelected ? themeManager.currentTheme.glowColor.opacity(0.4) : .clear,
-                            radius: isSelected ? 8 : 0,
-                            x: 0,
-                            y: 0
-                        )
+                // Selected chip gets a theme-tinted glass; others stay clear
+                .glassEffect(
+                    isSelected
+                        ? .regular.tint(themeManager.currentTheme.accentColor.opacity(0.6)).interactive()
+                        : .regular.interactive()
                 )
         }
+        .buttonStyle(.plain)
         .animation(.easeInOut(duration: 0.2), value: isSelected)
     }
 }
 
 #Preview {
     AllNamesView(viewModel: NamesViewModel())
+        .environment(\.layoutDirection, .rightToLeft)
 }

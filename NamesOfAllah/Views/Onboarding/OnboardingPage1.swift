@@ -17,7 +17,7 @@ struct OnboardingPage1: View {
 
             // Large SF Symbol — Apple style: big, centered, breathing room
             Image(systemName: "moon.stars.fill")
-                .font(.system(size: 80, weight: .thin))
+                .font(.system(size: 56, weight: .light))
                 .foregroundStyle(
                     LinearGradient(
                         colors: [
@@ -28,7 +28,8 @@ struct OnboardingPage1: View {
                         endPoint: .bottom
                     )
                 )
-                .shadow(color: AppConstants.Colors.accentGold.opacity(0.3), radius: 20)
+                .frame(width: 110, height: 110)
+                .glassEffect(in: .circle)
                 .opacity(showContent ? 1 : 0)
                 .scaleEffect(showContent ? 1 : 0.8)
                 .animation(.easeOut(duration: 0.7).delay(0.1), value: showContent)
@@ -53,6 +54,8 @@ struct OnboardingPage1: View {
                 .foregroundColor(.white)
                 .multilineTextAlignment(.center)
                 .lineSpacing(10)
+                // Keep the full hadith visible; spacers shrink first on short screens
+                .fixedSize(horizontal: false, vertical: true)
                 .padding(.horizontal, 40)
                 .opacity(showContent ? 1 : 0)
                 .offset(y: showContent ? 0 : 12)

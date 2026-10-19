@@ -123,17 +123,26 @@ extension Int {
     }
 }
 
+// MARK: - Rendering Mode Helper
+
+/// On tinted or clear Home Screens (accented mode) the system tints content white
+/// and keeps its opacity, so faint text needs a higher floor to stay readable.
+private func readableOpacity(_ opacity: Double, in mode: WidgetRenderingMode) -> Double {
+    mode == .fullColor ? opacity : max(opacity, 0.75)
+}
+
 // MARK: - Small Widget View
 
 struct SmallWidgetView: View {
     let entry: NameEntry
+    @Environment(\.widgetRenderingMode) private var renderingMode
 
     var body: some View {
         VStack(spacing: 6) {
             // Day counter
             Text("اليوم \(entry.dayNumber.arabicDigits) من ٩٩")
                 .font(.custom("IBMPlexSansArabic-Medium", size: 10))
-                .foregroundColor(Color(hex: "#ffd89b").opacity(0.6))
+                .foregroundColor(Color(hex: "#ffd89b").opacity(readableOpacity(0.6, in: renderingMode)))
 
             // Arabic name
             Text(entry.name.nameArabic)
@@ -147,17 +156,18 @@ struct SmallWidgetView: View {
                 )
                 .minimumScaleFactor(0.5)
                 .lineLimit(1)
-                .shadow(color: Color(hex: "#ffd89b").opacity(0.2), radius: 8)
+                .shadow(color: Color(hex: "#ffd89b").opacity(renderingMode == .fullColor ? 0.2 : 0), radius: 8)
+                .widgetAccentable()
 
             // English name
             Text(entry.name.nameEnglish)
                 .font(.custom("IBMPlexSansArabic-Medium", size: 11))
-                .foregroundColor(Color(hex: "#ffd89b").opacity(0.5))
+                .foregroundColor(Color(hex: "#ffd89b").opacity(readableOpacity(0.5, in: renderingMode)))
 
             // Translation
             Text(entry.name.translation)
                 .font(.custom("IBMPlexSansArabic-Regular", size: 9))
-                .foregroundColor(.white.opacity(0.4))
+                .foregroundColor(.white.opacity(readableOpacity(0.4, in: renderingMode)))
                 .lineLimit(1)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -169,6 +179,7 @@ struct SmallWidgetView: View {
 
 struct MediumWidgetView: View {
     let entry: NameEntry
+    @Environment(\.widgetRenderingMode) private var renderingMode
 
     var body: some View {
         HStack(spacing: 0) {
@@ -176,7 +187,7 @@ struct MediumWidgetView: View {
             VStack(spacing: 4) {
                 Text("اليوم \(entry.dayNumber.arabicDigits) من ٩٩")
                     .font(.custom("IBMPlexSansArabic-Medium", size: 11))
-                    .foregroundColor(Color(hex: "#ffd89b").opacity(0.6))
+                    .foregroundColor(Color(hex: "#ffd89b").opacity(readableOpacity(0.6, in: renderingMode)))
 
                 Text(entry.name.nameArabic)
                     .font(.custom("DiwanMishafi", size: 44))
@@ -189,17 +200,18 @@ struct MediumWidgetView: View {
                     )
                     .minimumScaleFactor(0.5)
                     .lineLimit(1)
-                    .shadow(color: Color(hex: "#ffd89b").opacity(0.2), radius: 8)
+                    .shadow(color: Color(hex: "#ffd89b").opacity(renderingMode == .fullColor ? 0.2 : 0), radius: 8)
+                    .widgetAccentable()
 
                 Text(entry.name.nameEnglish)
                     .font(.custom("IBMPlexSansArabic-Medium", size: 12))
-                    .foregroundColor(Color(hex: "#ffd89b").opacity(0.5))
+                    .foregroundColor(Color(hex: "#ffd89b").opacity(readableOpacity(0.5, in: renderingMode)))
             }
             .frame(maxWidth: .infinity)
 
             // Divider
             Rectangle()
-                .fill(Color(hex: "#ffd89b").opacity(0.1))
+                .fill(Color(hex: "#ffd89b").opacity(renderingMode == .fullColor ? 0.1 : 0.3))
                 .frame(width: 1)
                 .padding(.vertical, 16)
 
@@ -207,12 +219,12 @@ struct MediumWidgetView: View {
             VStack(alignment: .leading, spacing: 6) {
                 Text("المعنى")
                     .font(.custom("IBMPlexSansArabic-SemiBold", size: 10))
-                    .foregroundColor(Color(hex: "#ffd89b").opacity(0.7))
+                    .foregroundColor(Color(hex: "#ffd89b").opacity(readableOpacity(0.7, in: renderingMode)))
                     .frame(maxWidth: .infinity, alignment: .leading)
 
                 Text(entry.name.meaning)
                     .font(.custom("IBMPlexSansArabic-Regular", size: 11))
-                    .foregroundColor(.white.opacity(0.55))
+                    .foregroundColor(.white.opacity(readableOpacity(0.55, in: renderingMode)))
                     .lineLimit(4)
                     .multilineTextAlignment(.leading)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -227,6 +239,50 @@ struct MediumWidgetView: View {
     }
 }
 
+// MARK: - Lock Screen Widget Views
+
+/// Lock Screen, below the clock. The system renders it monochrome (vibrant),
+/// so it uses semantic styles instead of the gold palette.
+struct RectangularLockScreenView: View {
+    let entry: NameEntry
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            // Solid white everywhere: the Lock Screen already dims content,
+            // so any extra transparency makes the text hard to read
+            Text("اسم اليوم")
+                .font(.custom("IBMPlexSansArabic-Bold", size: 13))
+                .foregroundStyle(.white)
+                .lineLimit(1)
+
+            // DiwanMishafi ships in a single weight, so size carries the emphasis
+            Text(entry.name.nameArabic)
+                .font(.custom("DiwanMishafi", size: 36))
+                .foregroundStyle(.white)
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
+                .widgetAccentable()
+
+            Text(entry.name.translation)
+                .font(.system(size: 13, weight: .bold))
+                .foregroundStyle(.white)
+                .lineLimit(1)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .environment(\.layoutDirection, .rightToLeft)
+    }
+}
+
+/// Lock Screen, single line above the clock. The system draws inline widgets
+/// with its own font, so only plain text is used here.
+struct InlineLockScreenView: View {
+    let entry: NameEntry
+
+    var body: some View {
+        Text("اسم اليوم: \(entry.name.nameArabic)")
+    }
+}
+
 // MARK: - Widget Entry View
 
 struct NamesOfAllahWidgetEntryView: View {
@@ -237,6 +293,10 @@ struct NamesOfAllahWidgetEntryView: View {
         switch family {
         case .systemMedium:
             MediumWidgetView(entry: entry)
+        case .accessoryRectangular:
+            RectangularLockScreenView(entry: entry)
+        case .accessoryInline:
+            InlineLockScreenView(entry: entry)
         default:
             SmallWidgetView(entry: entry)
         }
@@ -289,7 +349,7 @@ struct NamesOfAllahWidget: Widget {
         }
         .configurationDisplayName("اسم اليوم")
         .description("اسم من أسماء الله الحسنى لكل يوم")
-        .supportedFamilies([.systemSmall, .systemMedium])
+        .supportedFamilies([.systemSmall, .systemMedium, .accessoryRectangular, .accessoryInline])
     }
 }
 
@@ -302,6 +362,18 @@ struct NamesOfAllahWidget: Widget {
 }
 
 #Preview(as: .systemMedium) {
+    NamesOfAllahWidget()
+} timeline: {
+    NameEntry(date: .now, name: Name.sample, dayNumber: 1)
+}
+
+#Preview(as: .accessoryRectangular) {
+    NamesOfAllahWidget()
+} timeline: {
+    NameEntry(date: .now, name: Name.sample, dayNumber: 1)
+}
+
+#Preview(as: .accessoryInline) {
     NamesOfAllahWidget()
 } timeline: {
     NameEntry(date: .now, name: Name.sample, dayNumber: 1)

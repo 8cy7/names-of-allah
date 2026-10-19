@@ -24,7 +24,7 @@ struct OnboardingPage2: View {
 
             // Icon — clean, single symbol
             Image(systemName: "text.book.closed.fill")
-                .font(.system(size: 72, weight: .thin))
+                .font(.system(size: 52, weight: .light))
                 .foregroundStyle(
                     LinearGradient(
                         colors: [
@@ -35,7 +35,8 @@ struct OnboardingPage2: View {
                         endPoint: .bottom
                     )
                 )
-                .shadow(color: AppConstants.Colors.accentGold.opacity(0.3), radius: 20)
+                .frame(width: 110, height: 110)
+                .glassEffect(in: .circle)
                 .opacity(showContent ? 1 : 0)
                 .scaleEffect(showContent ? 1 : 0.8)
                 .animation(.easeOut(duration: 0.7).delay(0.1), value: showContent)

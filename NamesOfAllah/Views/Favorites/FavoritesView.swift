@@ -44,7 +44,10 @@ struct FavoritesView: View {
                     if !favoriteNames.isEmpty {
                         Text("\(favoriteNames.count.arabicDigits) اسم")
                             .font(.custom("IBMPlexSansArabic-Medium", size: 15))
-                            .foregroundColor(.white.opacity(0.7))
+                            .foregroundColor(.white.opacity(0.8))
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 8)
+                            .glassEffect()
                     }
                 }
                 .padding(.bottom, 20)
@@ -54,8 +57,10 @@ struct FavoritesView: View {
                     // Empty State
                     VStack(spacing: 20) {
                         Image(systemName: "heart.slash")
-                            .font(.system(size: 60))
-                            .foregroundColor(.white.opacity(0.3))
+                            .font(.system(size: 44))
+                            .foregroundColor(themeManager.currentTheme.accentColor.opacity(0.8))
+                            .frame(width: 110, height: 110)
+                            .glassEffect(in: .circle)
 
                         VStack(spacing: 8) {
                             Text("لم تضف أي أسماء للمفضلة بعد")
@@ -69,7 +74,6 @@ struct FavoritesView: View {
                         .multilineTextAlignment(.center)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .padding(.bottom, 100)
                 } else {
                     ScrollView(.vertical, showsIndicators: false) {
                         LazyVStack(spacing: 15) {
@@ -120,4 +124,5 @@ struct FavoritesView: View {
 
 #Preview {
     FavoritesView(viewModel: NamesViewModel())
+        .environment(\.layoutDirection, .rightToLeft)
 }

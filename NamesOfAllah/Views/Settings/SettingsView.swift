@@ -23,8 +23,10 @@ struct SettingsView: View {
                     // MARK: - Header
                     HStack(spacing: 15) {
                         Image(systemName: "gearshape.fill")
-                            .font(.system(size: 50))
+                            .font(.system(size: 30))
                             .foregroundColor(themeManager.currentTheme.accentColor)
+                            .frame(width: 64, height: 64)
+                            .glassEffect(in: .circle)
 
                         Text("الإعدادات")
                             .font(.custom("IBMPlexSansArabic-Bold", size: 28))
@@ -116,14 +118,7 @@ struct SettingsView: View {
                                     .foregroundColor(.white.opacity(0.4))
                             }
                             .padding(16)
-                            .background(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .fill(Color.white.opacity(0.08))
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 12)
-                                            .stroke(Color.white.opacity(0.1), lineWidth: 1)
-                                    )
-                            )
+                            .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 20))
                         }
                     }
                     .padding(.horizontal, 20)
@@ -204,7 +199,7 @@ struct SettingsView: View {
                             .padding(.top, 8)
                     }
                     .padding(.top, 30)
-                    .padding(.bottom, 100)
+                    .padding(.bottom, 30)
                 }
             }
         }
@@ -293,20 +288,14 @@ struct SettingsToggle: View {
 
             Toggle("", isOn: $isOn)
                 .labelsHidden()
+                .tint(themeManager.currentTheme.accentColor)
                 .onChange(of: isOn) { oldValue, newValue in
                     onChange?(newValue)
                     HapticManager.shared.selection()
                 }
         }
         .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color.white.opacity(0.08))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.white.opacity(0.1), lineWidth: 1)
-                )
-        )
+        .glassEffect(in: .rect(cornerRadius: 20))
     }
 }
 
@@ -317,10 +306,10 @@ struct SettingsButton: View {
     @StateObject private var themeManager = ThemeManager.shared
 
     var body: some View {
-        Button(action: {
+        Button {
             action()
             HapticManager.shared.impact(style: .light)
-        }) {
+        } label: {
             HStack(spacing: 15) {
                 Image(systemName: icon)
                     .font(.system(size: 20))
@@ -338,15 +327,10 @@ struct SettingsButton: View {
                     .foregroundColor(.white.opacity(0.4))
             }
             .padding(16)
-            .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(Color.white.opacity(0.08))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color.white.opacity(0.1), lineWidth: 1)
-                    )
-            )
+            .contentShape(.rect)
+            .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 20))
         }
+        .buttonStyle(.plain)
     }
 }
 
@@ -371,16 +355,17 @@ struct InfoSheet: View {
 
                     Spacer()
 
-                    Button(action: { dismiss() }) {
+                    Button {
+                        dismiss()
+                    } label: {
                         Image(systemName: "xmark")
-                            .font(.system(size: 18, weight: .semibold))
-                            .foregroundColor(.white.opacity(0.7))
-                            .padding(10)
-                            .background(
-                                Circle()
-                                    .fill(Color.white.opacity(0.1))
-                            )
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(.white)
+                            .frame(width: 24, height: 24)
                     }
+                    .buttonStyle(.glass)
+                    .buttonBorderShape(.circle)
+                    .controlSize(.large)
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 20)
@@ -480,4 +465,5 @@ struct ThemeColorCircle: View {
 
 #Preview {
     SettingsView(viewModel: NamesViewModel())
+        .environment(\.layoutDirection, .rightToLeft)
 }

@@ -18,7 +18,7 @@ struct OnboardingPage3: View {
 
             // Icon
             Image(systemName: "sparkles")
-                .font(.system(size: 72, weight: .thin))
+                .font(.system(size: 52, weight: .light))
                 .foregroundStyle(
                     LinearGradient(
                         colors: [
@@ -29,7 +29,8 @@ struct OnboardingPage3: View {
                         endPoint: .bottom
                     )
                 )
-                .shadow(color: AppConstants.Colors.accentGold.opacity(0.3), radius: 20)
+                .frame(width: 110, height: 110)
+                .glassEffect(in: .circle)
                 .opacity(showContent ? 1 : 0)
                 .scaleEffect(showContent ? 1 : 0.8)
                 .animation(.easeOut(duration: 0.7).delay(0.1), value: showContent)
@@ -70,30 +71,19 @@ struct OnboardingPage3: View {
             Spacer()
 
             // CTA Button — Apple style: full-width rounded rect, bold
-            Button(action: {
+            Button {
                 HapticManager.shared.impact(style: .medium)
                 onComplete()
-            }) {
+            } label: {
                 Text("ابدأ الآن")
                     .font(.custom("IBMPlexSansArabic-Bold", size: 19))
                     .foregroundColor(Color(hex: "#1a1a2e"))
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 18)
-                    .background(
-                        RoundedRectangle(cornerRadius: 16)
-                            .fill(
-                                LinearGradient(
-                                    colors: [
-                                        AppConstants.Colors.accentGold,
-                                        Color(hex: "#f0c850")
-                                    ],
-                                    startPoint: .top,
-                                    endPoint: .bottom
-                                )
-                            )
-                    )
-                    .shadow(color: AppConstants.Colors.accentGold.opacity(0.25), radius: 12, y: 6)
+                    .padding(.vertical, 6)
             }
+            .buttonStyle(.glassProminent)
+            .tint(AppConstants.Colors.accentGold)
+            .controlSize(.large)
             .padding(.horizontal, 32)
             .opacity(showContent ? 1 : 0)
             .offset(y: showContent ? 0 : 16)
@@ -111,4 +101,5 @@ struct OnboardingPage3: View {
         GradientBackground()
         OnboardingPage3(onComplete: {})
     }
+    .environment(\.layoutDirection, .rightToLeft)
 }

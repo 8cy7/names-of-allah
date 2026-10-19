@@ -40,7 +40,7 @@ struct InfoCard: View {
     let content: String
     var backgroundColor: Color
 
-    init(content: String, backgroundColor: Color = Color.white.opacity(0.08)) {
+    init(content: String, backgroundColor: Color = Color.white.opacity(0.06)) {
         self.content = content
         self.backgroundColor = backgroundColor
     }
@@ -52,16 +52,10 @@ struct InfoCard: View {
             .multilineTextAlignment(.trailing)
             .lineSpacing(8)
             .fixedSize(horizontal: false, vertical: true)
-            .padding(16)
+            .padding(18)
             .frame(maxWidth: .infinity, alignment: .trailing)
-            .background(
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(backgroundColor)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16)
-                            .stroke(Color.white.opacity(0.1), lineWidth: 1)
-                    )
-            )
+            // Content cards use a quiet fill; Liquid Glass is reserved for controls
+            .background(backgroundColor, in: .rect(cornerRadius: 20))
     }
 }
 
@@ -86,20 +80,9 @@ struct BulletCard: View {
                 .font(.system(size: 14, weight: .semibold))
                 .foregroundColor(themeManager.currentTheme.accentColor)
                 .frame(width: 24, height: 24)
-                .background(
-                    Circle()
-                        .fill(Color.white.opacity(0.1))
-                )
         }
-        .padding(14)
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color.white.opacity(0.06))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.white.opacity(0.1), lineWidth: 1)
-                )
-        )
+        .padding(16)
+        .background(.white.opacity(0.06), in: .rect(cornerRadius: 16))
     }
 }
 

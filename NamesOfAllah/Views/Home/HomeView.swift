@@ -25,39 +25,33 @@ struct HomeView: View {
 
     var body: some View {
         ZStack {
-            // Background
+            // Background extends under the status bar and tab bar
             GradientBackground()
+                .ignoresSafeArea()
 
             if let name = nameOfDay {
                 // Full screen without scroll - perfectly centered
                 VStack(spacing: 0) {
-                    Spacer()
-                        .frame(height: 70)
+                    // Flexible spacers above and below keep the content centered on any screen height
+                    Spacer(minLength: 24)
 
                     // Day Counter
-                    HStack(spacing: 12) {
-                        Circle()
-                            .fill(Color(hex: "#ffd89b").opacity(0.5))
-                            .frame(width: 6, height: 6)
-
-                        Text("اليوم \(DataManager.shared.getCurrentDayNumber().arabicDigits) من ٩٩")
-                            .font(.custom("IBMPlexSansArabic-SemiBold", size: 16))
-                            .foregroundColor(Color(hex: "#ffd89b").opacity(0.7))
-
-                        Circle()
-                            .fill(Color(hex: "#ffd89b").opacity(0.5))
-                            .frame(width: 6, height: 6)
-                    }
-                    .opacity(showContent ? 1 : 0)
-                    .offset(y: showContent ? 0 : -20)
-                    .animation(.easeOut(duration: 0.6).delay(0.2), value: showContent)
+                    Text("اليوم \(DataManager.shared.getCurrentDayNumber().arabicDigits) من ٩٩")
+                        .font(.custom("IBMPlexSansArabic-SemiBold", size: 16))
+                        .foregroundColor(Color(hex: "#ffd89b").opacity(0.9))
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 10)
+                        .glassEffect(.regular.tint(Color(hex: "#ffd89b").opacity(0.12)))
+                        .opacity(showContent ? 1 : 0)
+                        .offset(y: showContent ? 0 : -20)
+                        .animation(.easeOut(duration: 0.6).delay(0.2), value: showContent)
 
                     Spacer()
                         .frame(height: 40)
 
                     // Islamic Icon
                     Image(systemName: "moon.stars.fill")
-                        .font(.system(size: 65, weight: .light))
+                        .font(.system(size: 50, weight: .light))
                         .foregroundStyle(
                             LinearGradient(
                                 colors: [
@@ -68,7 +62,8 @@ struct HomeView: View {
                                 endPoint: .bottomTrailing
                             )
                         )
-                        .shadow(color: Color(hex: "#ffd89b").opacity(0.4), radius: 12, x: 0, y: 0)
+                        .frame(width: 110, height: 110)
+                        .glassEffect(in: .circle)
                         .opacity(showContent ? 1 : 0)
                         .scaleEffect(showContent ? 1 : 0.5)
                         .animation(.spring(response: 0.8, dampingFraction: 0.6).delay(0.3), value: showContent)
@@ -143,58 +138,15 @@ struct HomeView: View {
                         HStack(spacing: 12) {
                             Image(systemName: "arrow.down")
                                 .font(.system(size: 18, weight: .semibold))
-                                .foregroundStyle(
-                                    LinearGradient(
-                                        colors: [.white, Color(hex: "#ffd89b")],
-                                        startPoint: .top,
-                                        endPoint: .bottom
-                                    )
-                                )
 
                             Text("اعرف المزيد")
                                 .font(.custom("IBMPlexSansArabic-Bold", size: 19))
-                                .foregroundStyle(
-                                    LinearGradient(
-                                        colors: [.white, Color(hex: "#ffd89b")],
-                                        startPoint: .top,
-                                        endPoint: .bottom
-                                    )
-                                )
                         }
-                        .padding(.horizontal, 45)
-                        .padding(.vertical, 18)
-                        .background(
-                            ZStack {
-                                // Glass background
-                                Capsule()
-                                    .fill(
-                                        LinearGradient(
-                                            colors: [
-                                                Color.white.opacity(0.18),
-                                                Color.white.opacity(0.08)
-                                            ],
-                                            startPoint: .topLeading,
-                                            endPoint: .bottomTrailing
-                                        )
-                                    )
-
-                                // Border
-                                Capsule()
-                                    .stroke(
-                                        LinearGradient(
-                                            colors: [
-                                                Color.white.opacity(0.4),
-                                                Color.white.opacity(0.1)
-                                            ],
-                                            startPoint: .topLeading,
-                                            endPoint: .bottomTrailing
-                                        ),
-                                        lineWidth: 1.5
-                                    )
-                            }
-                        )
-                        .shadow(color: .black.opacity(0.2), radius: 8, x: 0, y: 4)
+                        .foregroundStyle(Color(hex: "#ffd89b"))
+                        .padding(.horizontal, 24)
                     }
+                    .buttonStyle(.glass(.regular.tint(Color(hex: "#ffd89b").opacity(0.15)).interactive()))
+                    .controlSize(.large)
                     .opacity(showContent ? 1 : 0)
                     .scaleEffect(showContent ? 1 : 0.9)
                     .animation(.spring(response: 0.6, dampingFraction: 0.7).delay(0.9), value: showContent)
@@ -225,7 +177,6 @@ struct HomeView: View {
                     }
 
                     Spacer()
-                        .frame(minHeight: 80, maxHeight: 130)
                 }
                 .onAppear {
                     showContent = true
@@ -260,7 +211,6 @@ struct HomeView: View {
         }
         #endif
         .preferredColorScheme(.dark)
-        .ignoresSafeArea(.all)
     }
 }
 
